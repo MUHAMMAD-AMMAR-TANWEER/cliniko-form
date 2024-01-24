@@ -1,19 +1,19 @@
 "use client";
 
-import Page1 from "@/pages/Page1";
+import Page1 from "@/components/pages/Page1";
 import { NextUIProvider } from "@nextui-org/react";
 import { Provider } from "react-redux";
 import store from "../redux/store";
 import Image from "next/image";
 import AddPatient from "./addpatient/page";
 
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
-  const searchParams = useSearchParams()
- //@ts-ignore
-  const search = searchParams.get('patientId')
-  console.log("Main page data ", search)
+  const searchParams = useSearchParams();
+  //@ts-ignore
+  const search = searchParams.get("patientId");
+  console.log("Main page data ", search);
   return (
     <Provider store={store}>
       <NextUIProvider>

@@ -1,12 +1,12 @@
-import React from 'react'
-import Page2 from '@/pages/Page2'
+import React from "react";
+import Page2 from "@/components/pages/Page2";
 
 function page() {
   return (
     <div>
       <Page2 />
     </div>
-  )
+  );
 }
 
-export default page
+export default page;
