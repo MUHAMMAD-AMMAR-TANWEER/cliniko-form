@@ -314,10 +314,11 @@ function Page1() {
       insuranceMembershipNumber,
       IRN,
     };
+    // router.push(`/addpayment?patientId=${search}&&name=${firstname}+${lastname}&&email=${email}&&city${city}&&state=${state}`);
 
     try {
       const response = await fetch(
-        "https://9ab7-2406-d00-cccf-b461-75ed-fb6c-76a4-556c.ngrok-free.app/updatePatient",
+        "http://54.153.103.241:5500/updatePatient",
         {
           method: "POST",
           headers: {
@@ -330,7 +331,7 @@ function Page1() {
 
       if (response.ok) {
         console.log("API call successful!");
-        router.push("/addpayment");
+        router.push(`/addpayment?patientId=${search}&&name=${firstname}+${lastname}&&email=${email}&&city=${city}&&state=${state}`);
         // You can handle the success response here
       } else {
         console.error("API call failed!");
@@ -349,19 +350,23 @@ function Page1() {
         <div className="flex tablet:flex-col gap-x-3">
           <InputComp
             text="Title"
+            label="Title"
             onChange={(e: any) => setTitle(e.target.value)}
           />
           <InputComp
             text="Firstname"
+            label="Firstname"
             onChange={(e: any) => setFirstname(e.target.value)}
           />
           <InputComp
             text="Lastname"
+            label="Lastname"
             onChange={(e: any) => setLastname(e.target.value)}
           />
         </div>
         <InputComp
           text="Prefered Firstname"
+          label="Prefered Firstname"
           onChange={(e: any) => setPreferredFirstname(e.target.value)}
         />
         <h1 className="text-xl font-semibold  mt-2 text-[#006FEE]">
@@ -519,24 +524,29 @@ function Page1() {
         <InputComp
           type="email"
           text="Email"
+          label="Email"
           onChange={(e: any) => setEmail(e.target.value)}
         />
         <InputComp
           text="Address"
+          label="Address"
           onChange={(e: any) => setAddress(e.target.value)}
         />
 
         <div className="flex tablet:flex-col gap-x-3">
           <InputComp
             text="City"
+            label="City"
             onChange={(e: any) => setCity(e.target.value)}
           />
           <InputComp
             text="State"
+            label="State"
             onChange={(e: any) => setState(e.target.value)}
           />
           <InputComp
             text="Postcode"
+            label="Postcode"
             onChange={(e: any) => setPostcode(e.target.value)}
           />
         </div>
@@ -546,26 +556,32 @@ function Page1() {
         <h1 className="text-lg font-semibold">Other Information</h1>
         <InputComp
           text="Occupation"
+          label="Occupation"
           onChange={(e: any) => setOccupation(e.target.value)}
         />
         <InputComp
           text="Emergency contact"
+          label="Emergency contact"
           onChange={(e: any) => setEmergencyContact(e.target.value)}
         />
         <InputComp
           text="Medicare number"
+          label="Medicare number"
           onChange={(e: any) => setMedicareNumber(e.target.value)}
         />
         <InputComp
           text="Medicare reference number"
+          label="Medicare reference number"
           onChange={(e: any) => setMedicareReferenceNumber(e.target.value)}
         />
         <InputComp
           text="DVA card number"
+          label="DVA card number"
           onChange={(e: any) => setDvaCardNumber(e.target.value)}
         />
         <InputComp
           text="Reference number"
+          label="Reference number"
           onChange={(e: any) => setReferenceNumber(e.target.value)}
         />
 

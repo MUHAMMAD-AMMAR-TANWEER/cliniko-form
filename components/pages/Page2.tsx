@@ -2,28 +2,73 @@
 
 import InputComp from "@/components/InputComp";
 import { Button, Checkbox } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter ,useSearchParams} from "next/navigation";
+import React, { useState ,useEffect} from "react";
 
 function Page2() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const namesearch = searchParams.get('name')
+  const emailsearch = searchParams.get('email')
+
+  const citysearch = searchParams.get('city')
+  const statesearch = searchParams.get('state')
+  const patientId = searchParams.get('patientId')
+  console.log(statesearch)
+  console.log("City is here ",citysearch)
   const [apiUrl, setApiUrl] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
+  const [state, setState] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   console.log("form data", name, email, city, phoneNumber)
+  const patientIdSearch :any= searchParams.get('patientId')
+  // const namesearch = searchParams.get('name')
+  // if (namesearch){
+  //   setName(namesearch)
+  // }
+  // const emailsearch = searchParams.get('email')
+  // if (emailsearch){
+  //   setEmail(emailsearch)
+  // }
+  // const phoneNumberSearch = searchParams.get('phoneNumber')
+  // if (phoneNumberSearch){
+  //   setPhoneNumber(phoneNumberSearch)
+  // }
+  useEffect(() => {
+    if (namesearch) {
+      setName(namesearch);
+    }
+  }, [namesearch]);
+
+  useEffect(() => {
+    if (emailsearch) {
+      setEmail(emailsearch);
+    }
+  }, [emailsearch]);
+  //citysearch
+  useEffect(() => {
+    if (citysearch) {
+      setCity(citysearch);
+    }
+  }, [citysearch]);
+  useEffect(() => {
+    if (statesearch) {
+      setState(statesearch);
+    }
+  }, [statesearch]);
 
 
 
   const handleSubmit = async () => {
     // Access the form values and perform necessary actions
 
-    const requestBody = { name, email, city, phoneNumber };
+    const requestBody = {patientId ,name, email, city, phoneNumber ,state};
 
     try {
       const response = await fetch(
-        "https://9ab7-2406-d00-cccf-b461-75ed-fb6c-76a4-556c.ngrok-free.app/createStripeCustomer",
+        "http://54.153.103.241:5500/createStripeCustomer",
         {
           method: "POST",
           headers: {
@@ -54,6 +99,8 @@ function Page2() {
       // Handle network or other errors
     }
     // Perform your form submission logic here
+  
+    console.log(requestBody)
   };
 
   return (
@@ -67,18 +114,29 @@ function Page2() {
         <div className="relative flex flex-col gap-y-6">
           <InputComp
             text="Name"
+            value={name}
             onChange={(e: any) => setName(e.target.value)}
           />
           <InputComp
             text="Email Address"
+
+            value={email}
             onChange={(e: any) => setEmail(e.target.value)}
           />
           <InputComp
             text="City"
+            value={city}
+            onChange={(e: any) => setCity(e.target.value)}
+          />
+                    <InputComp
+            text="State"
+            value={state}
             onChange={(e: any) => setCity(e.target.value)}
           />
           <InputComp
             text="Phone Number"
+            value={'+61'}
+            // value={`+61`}
             onChange={(e: any) => setPhoneNumber(e.target.value)}
           />
           <h1 className="text-xl font-semibold  mt-2 text-[#006FEE]">
