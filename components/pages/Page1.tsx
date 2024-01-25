@@ -23,8 +23,8 @@ function Page1() {
   const searchParams = useSearchParams();
   const [showPronounce, setShowPronounce] = useState(false);
   //@ts-ignore
-  const search :any= searchParams.get('patientId')
-  console.log("here is the search" ,search)
+  const patientId :any= searchParams.get('patientId')
+  console.log("here is the search" ,patientId)
 
   const handleChange = (value: any) => {
     setShowPronounce(!showPronounce);
@@ -249,14 +249,15 @@ function Page1() {
   const handleSubmit = async () => {
     // Access the form values and perform necessary actions
     //@ts-ignore
-    const search :any= searchParams.get('patientId')
-    console.log("here is the search" ,search)
+    const patientId :any= searchParams.get('patientId')
+    console.log("here is the search" ,patientId)
     if (privacyPolicy === "accepted") {
       console.log("Submitted Successfully!");
     } else {
-      console.log("Please accept privacy policy!" ,search);
+      console.log("Please accept privacy policy!" ,patientId);
     }
     const requestBody = {
+      patientId,
       nominative,
       accusative,
       possessivePronomial,
@@ -314,8 +315,8 @@ function Page1() {
       insuranceMembershipNumber,
       IRN,
     };
-    // router.push(`/addpayment?patientId=${search}&&name=${firstname}+${lastname}&&email=${email}&&city${city}&&state=${state}`);
-
+    // router.push(`/addpayment?patientId=${patientId}&&name=${firstname}+${lastname}&&email=${email}&&city${city}&&state=${state}`);
+    console.log(requestBody)
     try {
       const response = await fetch(
         "http://54.153.103.241:5500/updatePatient",
@@ -331,7 +332,7 @@ function Page1() {
 
       if (response.ok) {
         console.log("API call successful!");
-        router.push(`/addpayment?patientId=${search}&&name=${firstname}+${lastname}&&email=${email}&&city=${city}&&state=${state}`);
+        router.push(`/addpayment?patientId=${patientId}&&name=${firstname}+${lastname}&&email=${email}&&city=${city}&&state=${state}`);
         // You can handle the success response here
       } else {
         console.error("API call failed!");
