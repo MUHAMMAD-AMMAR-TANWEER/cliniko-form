@@ -1182,7 +1182,7 @@ export default function Page3() {
               label="Funding Management"
               orientation="horizontal"
               color="warning"
-            >
+            > 
               <Radio
                 onChange={(e) => handleRadioChange2(e.target.value)}
                 value="Agency-Managed"
