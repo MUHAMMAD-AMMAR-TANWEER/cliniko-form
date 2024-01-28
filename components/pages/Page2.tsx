@@ -68,7 +68,7 @@ function Page2() {
 
     try {
       const response = await fetch(
-        "http://54.153.103.241:5500/createStripeCustomer",
+        "https://d875-2406-d00-cccf-b461-cba-91b3-e1f2-f925.ngrok-free.app/createStripeCustomer",
         {
           method: "POST",
           headers: {
@@ -135,7 +135,8 @@ function Page2() {
           />
           <InputComp
             text="Phone Number"
-            value={'+61'}
+            
+            
             // value={`+61`}
             onChange={(e: any) => setPhoneNumber(e.target.value)}
           />

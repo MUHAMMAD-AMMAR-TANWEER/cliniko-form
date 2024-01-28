@@ -1,5 +1,5 @@
 "use client";
-import { useRouter ,useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { TbMathGreater } from "react-icons/tb";
 import OptionField from "@/components/OptionField";
@@ -23,12 +23,61 @@ function Page1() {
   const searchParams = useSearchParams();
   const [showPronounce, setShowPronounce] = useState(false);
   //@ts-ignore
-  const patientId :any= searchParams.get('patientId')
-  console.log("here is the search" ,patientId)
+  const patientId: any = searchParams.get("patientId");
+  console.log("here is the search", patientId);
+
+  const [formData, setFormData] = useState<any>({});
+
+  const [RefferalTypeError, setRefferalTypeError] = useState<string | null>(
+    null
+  );
+
+  const handleRefferalTypeChange = (
+    selectedOption: string,
+    error: string | null
+  ) => {
+    setRefferalTypeError(error);
+    // Handle the selected option as needed
+  };
 
   const handleChange = (value: any) => {
     setShowPronounce(!showPronounce);
   };
+
+  const [phoneNumberError, setPhoneNumberError] = useState<string | null>(null);
+
+  const handlePhoneNumberError = (error: string | null) => {
+    console.log(error, "error is here");
+    setPhoneNumberError(error);
+  };
+
+  const [dobError, setDOBError] = useState<string | null>(null);
+
+  const handleDOBError = (error: string | null) => {
+    setDOBError(error);
+  };
+  const [optionFieldError, setOptionFieldError] = useState<string | null>(null);
+
+  const [errors, setErrors] = useState({
+    title: "",
+    firstname: "",
+    lastname: "",
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    postcode: "",
+    emergencyContact: "",
+    medicareNumber: "",
+    medicareReferenceNumber: "",
+    referringType: "",
+
+    // Add other fields here with initial empty strings
+    // ...
+  });
+
+  const [radioValue, setRadioValue] = useState(""); // State to store radioValue
+
   const [title, setTitle] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -74,6 +123,8 @@ function Page1() {
 
   // ConditionalRadioButton2
   const [employer, setEmployer] = useState("");
+  const [employerError, setEmployerError] = useState<string>("");
+
   const [employerEmail, setEmployerEmail] = useState("");
   const [employerNumber, setEmployerNumber] = useState("");
   const [caseManager, setCaseManager] = useState("");
@@ -102,15 +153,16 @@ function Page1() {
 
   const dob = useSelector((state: any) => state.dob);
   const phoneNumber = useSelector((state: any) => state.phoneNumber);
+  const finalPhoneNumber = phoneNumber.slice(-1);
   const expiryDate = useSelector((state: any) => state.expiryDate);
   const dateOfInjury = useSelector((state: any) => state.dateOfInjury);
-  const finalPhoneNumber = phoneNumber.slice(-1);
 
   const handleRadioButtonChange = (value: any) => {
     setPrivacyPolicy(value);
   };
 
-  const handleReferringDoctorChange = (value: any) => {
+  const handleReferringDoctorChange = (value: any, error: string | null) => {
+    setRefferalTypeError(error);
     setReferringDoctor(value);
   };
 
@@ -127,6 +179,7 @@ function Page1() {
   };
 
   const handleConditional2FieldsChange = (fields: any) => {
+    setFormData((prevFormData: any) => ({ ...prevFormData, ...fields }));
     setEmployer(fields.Employer);
     setEmployerEmail(fields.EmployerEmail);
     setCaseManager(fields.caseManager);
@@ -135,8 +188,6 @@ function Page1() {
     setEmployerNumber(fields.employerNumber);
     setInsuranceCompany(fields.insuranceCompany);
     setInsuranceEmail(fields.insuranceEmail);
-
-    // console.log("Employer field",fields );
   };
 
   const handleConditional3FieldsChange = (fields: any) => {
@@ -145,7 +196,6 @@ function Page1() {
     setcontactNumber(fields.contactNumber);
     setcaseManagerEmail2(fields.caseManagerEmail);
     setaccountEmail(fields.accountEmail);
-    // console.log("Employer field",fields );
   };
   const handleConditional4FieldsChange = (fields: any) => {
     setndisNumber(fields.ndisNumber);
@@ -154,7 +204,6 @@ function Page1() {
     setplanManagerNumber(fields.planManagerNumber);
     setplanManagerEmail(fields.planManagerEmail);
     setplanManagerInvoiceEmail(fields.planManagerInvoiceEmail);
-    // console.log("Employer field",fields );
   };
 
   const handleConditional5FieldsChange = (fields: any) => {
@@ -166,6 +215,11 @@ function Page1() {
     selectedOption: any,
     inputValue: any
   ) => {
+    if (selectedOption === "" && inputValue === "") {
+      setOptionFieldError(`${heading} is required`);
+    } else {
+      setOptionFieldError(null);
+    }
     // Do something with the data, for example, log it
     setSex(selectedOption);
     setSexSpacify(inputValue);
@@ -246,15 +300,205 @@ function Page1() {
   };
 
   console.log("privacypolicy", privacyPolicy);
+
+  const validateFields = () => {
+    // Validation logic for each required field
+    let formIsValid = true;
+    
+
+
+    if (!title) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        title: "Title is required",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, title: "" }));
+    }
+
+    if (!firstname) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        firstname: "Firstname is required",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, firstname: "" }));
+    }
+
+    if (!lastname) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        lastname: "Lastname is required",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, lastname: "" }));
+    }
+
+
+    if (!sex) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        sex: "Sex is Required!",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, sex: "" }));
+    }
+
+    if (!phoneNumber) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        phoneNumber: "Phone Number is Required!",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, phoneNumber: "" }));
+    }
+
+    if (!email) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: "email is Required!",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, email: "" }));
+    }
+
+    if (!address) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        address: "address is Required!",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, address: "" }));
+    }
+
+    if (!city) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        city: "City is Required!",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, city: "" }));
+    }
+
+    if (!state) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        state: "state is Required!",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, state: "" }));
+    }
+
+    if (!postcode) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        postcode: "postcode is Required!",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, postcode: "" }));
+    }
+
+    if (!emergencyContact) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        emergencyContact: "Emergency Contact is Required!",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, emergencyContact: "" }));
+    }
+
+    if (!medicareNumber) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        medicareNumber: "Medicare Number is Required!",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, medicareNumber: "" }));
+    }
+
+    if (!medicareReferenceNumber) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        medicareReferenceNumber: "Medicare Reference Number is Required!",
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        medicareReferenceNumber: "",
+      }));
+    }
+
+    if (!referringType) {
+      formIsValid = false;
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        referringType: "Referring Type is Required!",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, referringType: "" }));
+    }
+
+    // Add similar validation logic for other fields
+
+    return formIsValid;
+  };
+
   const handleSubmit = async () => {
     // Access the form values and perform necessary actions
     //@ts-ignore
-    const patientId :any= searchParams.get('patientId')
-    console.log("here is the search" ,patientId)
+    // const requiredFields = [
+    //   "title",
+    //   "firstname",
+    //   "lastname",
+    //   "dob",
+    //   "sex",
+    //   "email",
+    //   "address",
+    //   "city",
+    //   "state",
+    //   "postcode",
+    //   "emergencyContact",
+    //   "medicareNumber",
+    //   "medicareReferenceNumber",
+    //   "referringType",
+    // ];
+    // const newErrors: Record<string, string> = {};
+
+    // requiredFields.forEach((field) => {
+    //   if (!eval(field)) {
+    //     newErrors[field] = `Please fill in ${field}`;
+    //   }
+    // });
+
+    // // Check if any errors occurred
+    // if (Object.keys(newErrors).length > 0) {
+    //   setErrors(newErrors);
+    //   return;
+    // }
+
+    const isFormValid = validateFields();
+console.log( "Radio VAlue ",radioValue)
+  
+
+    const patientId: any = searchParams.get("patientId");
+    console.log("here is the search", patientId);
     if (privacyPolicy === "accepted") {
       console.log("Submitted Successfully!");
     } else {
-      console.log("Please accept privacy policy!" ,patientId);
+      console.log("Please accept privacy policy!", patientId);
     }
     const requestBody = {
       patientId,
@@ -316,31 +560,35 @@ function Page1() {
       IRN,
     };
     // router.push(`/addpayment?patientId=${patientId}&&name=${firstname}+${lastname}&&email=${email}&&city${city}&&state=${state}`);
-    console.log(requestBody)
-    try {
-      const response = await fetch(
-        "http://54.153.103.241:5500/updatePatient",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // Add any other headers if needed
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
+    console.log(requestBody);
+    if (privacyPolicy === "accepted" && isFormValid) {
+      try {
+        const response = await fetch(
+          "https://d875-2406-d00-cccf-b461-cba-91b3-e1f2-f925.ngrok-free.app/updatePatient",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              // Add any other headers if needed
+            },
+            body: JSON.stringify(requestBody),
+          }
+        );
 
-      if (response.ok) {
-        console.log("API call successful!");
-        router.push(`/addpayment?patientId=${patientId}&&name=${firstname}+${lastname}&&email=${email}&&city=${city}&&state=${state}`);
-        // You can handle the success response here
-      } else {
-        console.error("API call failed!");
-        // Handle the failure response, e.g., show an error message
+        if (response.ok) {
+          console.log("API call successful!");
+          router.push(
+            `/addpayment?patientId=${patientId}&&name=${firstname}+${lastname}&&email=${email}&&city=${city}&&state=${state}`
+          );
+          // You can handle the success response here
+        } else {
+          console.error("API call failed!");
+          // Handle the failure response, e.g., show an error message
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        // Handle network or other errors
       }
-    } catch (error) {
-      console.error("Error:", error);
-      // Handle network or other errors
     }
     // Perform your form submission logic here
   };
@@ -353,16 +601,19 @@ function Page1() {
             text="Title"
             label="Title"
             onChange={(e: any) => setTitle(e.target.value)}
+            error={errors.title}
           />
           <InputComp
             text="Firstname"
             label="Firstname"
             onChange={(e: any) => setFirstname(e.target.value)}
+            error={errors.firstname}
           />
           <InputComp
             text="Lastname"
             label="Lastname"
             onChange={(e: any) => setLastname(e.target.value)}
+            error={errors.lastname}
           />
         </div>
         <InputComp
@@ -374,13 +625,22 @@ function Page1() {
           Select Date of Birth
         </h1>
         <div className="text-[#006FEE] font-medium">
-          <DatePicker />
+          <DatePicker onError={handleDOBError} />
+          {dobError && (
+            <p className="text-red-500 text-xs italic">{dobError}</p>
+          )}
         </div>
-        <OptionField
-          onChange={handleOptionFieldSexChange}
-          heading="sex"
-          Option={["Male", "Female", "AFAB", "AMAB"]}
-        />
+        <div>
+          <OptionField
+            onChange={handleOptionFieldSexChange}
+            heading="sex"
+            Option={["Male", "Female", "AFAB", "AMAB"]}
+          />
+          {optionFieldError && (
+            <p className="text-red-500">{optionFieldError}</p>
+          )}
+        </div>
+
         <OptionField
           onChange={handleOptionFieldGenderIdentityChange}
           heading="Gender Identity"
@@ -519,19 +779,25 @@ function Page1() {
           <RadioButton onChange={handleRadioButtonChange} />
         </div>
         {/* Related Patient */}
-
-        <PhoneNumberInput />
+        <div>
+          <PhoneNumberInput onError={handlePhoneNumberError} />
+          {phoneNumberError && (
+            <p className="text-red-500">{phoneNumberError}</p>
+          )}
+        </div>
 
         <InputComp
           type="email"
           text="Email"
           label="Email"
           onChange={(e: any) => setEmail(e.target.value)}
+          error={errors.email}
         />
         <InputComp
           text="Address"
           label="Address"
           onChange={(e: any) => setAddress(e.target.value)}
+          error={errors.address}
         />
 
         <div className="flex tablet:flex-col gap-x-3">
@@ -539,16 +805,19 @@ function Page1() {
             text="City"
             label="City"
             onChange={(e: any) => setCity(e.target.value)}
+            error={errors.city}
           />
           <InputComp
             text="State"
             label="State"
             onChange={(e: any) => setState(e.target.value)}
+            error={errors.state}
           />
           <InputComp
             text="Postcode"
             label="Postcode"
             onChange={(e: any) => setPostcode(e.target.value)}
+            error={errors.postcode}
           />
         </div>
 
@@ -564,16 +833,19 @@ function Page1() {
           text="Emergency contact"
           label="Emergency contact"
           onChange={(e: any) => setEmergencyContact(e.target.value)}
+          error={errors.emergencyContact}
         />
         <InputComp
           text="Medicare number"
           label="Medicare number"
           onChange={(e: any) => setMedicareNumber(e.target.value)}
+          error={errors.medicareNumber}
         />
         <InputComp
           text="Medicare reference number"
           label="Medicare reference number"
           onChange={(e: any) => setMedicareReferenceNumber(e.target.value)}
+          error={errors.medicareReferenceNumber}
         />
         <InputComp
           text="DVA card number"
@@ -586,11 +858,11 @@ function Page1() {
           onChange={(e: any) => setReferenceNumber(e.target.value)}
         />
 
-        <DropDown
+        {/* <DropDown
           onChange={handleReferringDoctorChange}
           heading="Reffering doctor"
           Option={["Doctor1", "Doctor2", "Doctor3"]}
-        />
+        /> */}
 
         <div>
           <h1 className="text-lg font-semibold mb-2 mt-2">
@@ -603,7 +875,7 @@ function Page1() {
           />
         </div>
 
-        <ConditionalRadioButton5
+        {/* <ConditionalRadioButton5
           onFieldsChange={handleConditional5FieldsChange}
         />
         <ConditionalRadioButton
@@ -611,13 +883,14 @@ function Page1() {
         />
         <ConditionalRadioButton2
           onFieldsChange={handleConditional2FieldsChange}
+          setRadioValue={setRadioValue}
         />
         <ConditionalRadioButton3
           onFieldsChange={handleConditional3FieldsChange}
         />
         <ConditionalRadioButton4
           onFieldsChange={handleConditional4FieldsChange}
-        />
+        /> */}
 
         <div className="flex items-center justify-end ">
           <Button

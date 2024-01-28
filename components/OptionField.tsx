@@ -12,9 +12,11 @@ const OptionField: React.FC<Options> = ({ Option, heading, onChange }) => {
   const validVariants = ["bordered"];
   const [selectedOption, setSelectedOption] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const handleOptionChange = (value: any) => {
     setSelectedOption(value);
+    setError(null); // Reset error when an option is selected
     // Call the parent callback function with the updated data
     onChange && onChange(heading, value, inputValue);
   };
@@ -25,10 +27,16 @@ const OptionField: React.FC<Options> = ({ Option, heading, onChange }) => {
     onChange && onChange(heading, selectedOption, value);
   };
 
-  // Call the callback function with the initial values when the component mounts
+  // Validate if an option is selected
   useEffect(() => {
+    if (selectedOption === "" && inputValue === "") {
+      setError(`${heading} is required`);
+    } else {
+      setError(null);
+    }
+    // Call the callback function with the initial values when the component mounts
     onChange && onChange(heading, selectedOption, inputValue);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectedOption, inputValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -71,6 +79,8 @@ const OptionField: React.FC<Options> = ({ Option, heading, onChange }) => {
                     value={inputValue}
                     onChange={(e) => handleInputChange(e.target.value)}
                   />
+                  {/* Display error message if validation fails */}
+                  {error && <p className="text-red-500">{error}</p>}
                 </div>
               ))}
             </>

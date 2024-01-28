@@ -3,11 +3,22 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setDOB } from "../redux/actions";
 
-const DatePicker: React.FC = () => {
+interface DatePickerProps {
+  onError: (error: string | null) => void;
+}
+
+const validateDate = (year: string, month: string, day: string): boolean => {
+  // Implement your date validation logic here
+  // For simplicity, we assume a valid date if all fields are non-empty
+  return year !== "" && month !== "" && day !== "";
+};
+
+const DatePicker: React.FC<DatePickerProps> = ({onError}) => {
   const dispatch = useDispatch();
   const [day, setDay] = useState<string>("");
   const [month, setMonth] = useState<string>("");
   const [year, setYear] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
 
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
   const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
@@ -15,12 +26,23 @@ const DatePicker: React.FC = () => {
 
   useEffect(() => {
     const handleDOBChange = () => {
-      const dob = `${year}-${month}-${day}`;
-      dispatch(setDOB(dob));
+      const isValidDate = validateDate(year, month, day);
+      const errorMessage = isValidDate ? null : "Please add Date Of Birth";
+      // setError(errorMessage);
+
+      if (isValidDate) {
+        const dob = `${year}-${month}-${day}`;
+        dispatch(setDOB(dob));
+      }
+
+      // Pass the error message to the parent component
+      onError(errorMessage);
     };
 
     handleDOBChange();
-  }, [day, month, year, dispatch]);
+  }, [day, month, year, dispatch, onError]);
+
+  
 
   return (
     <div className="flex">
@@ -71,6 +93,9 @@ const DatePicker: React.FC = () => {
           </option>
         ))}
       </select>
+
+      {/* Error message */}
+      {/* {error && <p className="text-red-500 text-xs italic">{error}</p> } */}
     </div>
   );
 };

@@ -1,22 +1,29 @@
 // PhoneNumberInput.tsx
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setPhoneNumber } from "../redux/actions";
 
-const PhoneNumberInput = () => {
+interface PhoneNumberInputProps {
+  onError: (error: string | null) => void;
+}
+
+const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({ onError }) => {
   const [phoneType, setPhoneType] = useState("mobile");
   const [PhoneNumber, setPhoneNumberLocal] = useState("");
   const dispatch = useDispatch();
 
-  const handleTypeChange = (e: any) => {
+  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPhoneType(e.target.value);
   };
 
   useEffect(() => {
-    const phoneNumber: any = { phone_type: phoneType, number: PhoneNumber };
-    console.log(phoneNumber);
+    if (PhoneNumber === "") {
+      onError("Phone Number is required!");
+    } else {
+      onError("");
+    }
+    const phoneNumber = { phone_type: phoneType, number: PhoneNumber };
     // Dispatch the action when phone number changes
-    console.log("useeffect", phoneNumber);
     dispatch(setPhoneNumber(phoneNumber));
   }, [dispatch, phoneType, PhoneNumber]);
 

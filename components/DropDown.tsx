@@ -1,24 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Select, SelectItem, Input } from "@nextui-org/react";
 
 interface options {
   Option: Array<string>;
   heading: string;
-  onChange?: any
+  onChange?: any;
+  error?: string | undefined;
+  className?: string;
 }
 
-const App: React.FC<options> = ({ Option, heading, onChange }) => {
+const App: React.FC<options> = ({
+  Option,
+  heading,
+  onChange,
+  error,
+  className,
+}) => {
   const Options = Option;
-  
+
   const validVariants = ["bodered"];
   const [selectedOption, setSelectedOption] = useState("none");
-  console.log("Select", selectedOption);
-  
+  // const [error, setError] = useState<string | null>(null);
 
-  const handleDropdownChange = (event:any) => {
+  console.log("Select", selectedOption);
+
+  const handleDropdownChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const selectedValue = event.target.value;
-    onChange(selectedValue);
+    onChange(selectedValue, error);
+    if (selectedValue === "none") {
+      onChange(selectedValue, "Please select an option");
+    } else {
+      onChange(selectedValue, null);
+    }
   };
+
+  useEffect(() => {
+    // Call the callback function with the initial values when the component mounts
+    onChange && onChange(selectedOption);
+  }, [selectedOption]);
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -29,18 +50,20 @@ const App: React.FC<options> = ({ Option, heading, onChange }) => {
         >
           <h1 className="text-md font-semibold text-[#006FEE]">{heading}</h1>
 
-          <Select
-            label={selectedOption}
-            className="max-w-xs"
-            value={selectedOption}
-            onChange={handleDropdownChange}
-          >
-            {Options.map((option: string) => (
-              <SelectItem key={option} value={option}>
-                {option}
-              </SelectItem>
-            ))}
-          </Select>
+          <div className={`${className}`}>
+            <Select
+              label={selectedOption}
+              className="max-w-xs"
+              value={selectedOption}
+              onChange={handleDropdownChange}
+            >
+              {Options.map((option: string) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+            </Select>
+          </div>
         </div>
       ))}
     </div>

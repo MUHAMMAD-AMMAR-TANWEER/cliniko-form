@@ -8,7 +8,7 @@ interface selectedValue {
 const App: React.FC<selectedValue> = ({ onChange }) => {
 
   const handleRadioButtonChange = (event: any) => {
-    const selectedValue = event.target.value;
+    const selectedValue = "accepted";
     onChange(selectedValue);
   };
   
@@ -17,11 +17,12 @@ const App: React.FC<selectedValue> = ({ onChange }) => {
       label="Does the patient consent to your privacy policy?"
       color="warning"
       orientation="horizontal"
+      defaultValue="accepted"
     >
       <Radio value="no-response" onChange={handleRadioButtonChange}>
         No Response
       </Radio>
-      <Radio value="accepted" onChange={handleRadioButtonChange}>
+      <Radio value="accepted"  onChange={handleRadioButtonChange}>
         Accepted
       </Radio>
       <Radio value="rejected" onChange={handleRadioButtonChange}>
