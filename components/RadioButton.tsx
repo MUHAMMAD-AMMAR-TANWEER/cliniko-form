@@ -7,8 +7,8 @@ interface selectedValue {
 
 const App: React.FC<selectedValue> = ({ onChange }) => {
 
-  const handleRadioButtonChange = (event: any) => {
-    const selectedValue = "accepted";
+  const handleRadioButtonChange = (e: any) => {
+    const selectedValue = e.target.value;
     onChange(selectedValue);
   };
   

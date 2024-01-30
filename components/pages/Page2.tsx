@@ -68,7 +68,7 @@ function Page2() {
 
     try {
       const response = await fetch(
-        "https://d875-2406-d00-cccf-b461-cba-91b3-e1f2-f925.ngrok-free.app/createStripeCustomer",
+        "https://f453-111-88-61-44.ngrok-free.app/createStripeCustomer",
         {
           method: "POST",
           headers: {

@@ -457,7 +457,7 @@ export default function Page3() {
       console.log(requestBody);
       try {
         const response = await fetch(
-          "https://d875-2406-d00-cccf-b461-cba-91b3-e1f2-f925.ngrok-free.app/updatePatient",
+          "https://f453-111-88-61-44.ngrok-free.app/updatePatient",
           {
             method: "POST",
             headers: {
@@ -601,6 +601,12 @@ export default function Page3() {
     setFundingManagement(value);
     // Reset the input value when radio selection changes
   };
+
+  const handlePrivacyPolicy = (value:any) => {
+    setPrivacyPolicy(value)
+  }
+
+  console.log(privacyPolicy)
 
   return (
     <div className="relative flex flex-col gap-y-6">
@@ -786,7 +792,7 @@ export default function Page3() {
         <h1 className="text-md font-semibold text-[#006FEE] mb-2">
           Privacy policy
         </h1>
-        <RadioButton />
+        <RadioButton onChange={handlePrivacyPolicy} />
       </div>
       <div>
         <PhoneNumberInput onError={handlePhoneNumberError} />
