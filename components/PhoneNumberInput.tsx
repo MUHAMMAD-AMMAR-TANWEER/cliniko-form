@@ -28,18 +28,19 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({ onError }) => {
   }, [dispatch, phoneType, PhoneNumber]);
 
   return (
-    <div className="flex gap-x-2">
+    <div className="flex gap-x-2 border border-gray-200 py-3 px-4 bg-gray-100 w-[50%] rounded-lg">
       {/* Phone Type Selection */}
-      <select value={phoneType} onChange={handleTypeChange}>
-        <option value="mobile">Mobile</option>
-        <option value="home">Home</option>
-        <option value="work">Work</option>
-        <option value="fax">Fax</option>
-        <option value="other">Other</option>
+      <select value={phoneType} onChange={handleTypeChange} className="bg-transparent outline-none">
+        <option value="mobile" className="bg-transparent p-2">Mobile</option>
+        <option value="home" className="bg-transparent">Home</option>
+        <option value="work" className="bg-transparent">Work</option>
+        <option value="fax" className="bg-transparent">Fax</option>
+        <option value="other" className="bg-transparent">Other</option>
       </select>
 
       {/* Phone Number Input */}
       <input
+      className="bg-transparent border-none outline-none"
         type="tel"
         placeholder={`Phone (${phoneType})`}
         value={PhoneNumber}

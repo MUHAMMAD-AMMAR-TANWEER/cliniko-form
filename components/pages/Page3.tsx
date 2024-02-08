@@ -11,7 +11,7 @@ import TextArea from "../TextArea";
 import RadioButton from "@/components/RadioButton";
 import DropDown from "@/components/DropDown";
 import PhoneNumberInput from "../PhoneNumberInput";
-
+import isEmail from "is-email";
 export default function Page3() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -25,6 +25,7 @@ export default function Page3() {
   const finalPhoneNumber = phoneNumber.slice(-1);
 
   // -------------------------- UseStates -------------------------------
+  const isRequired = true;
   const [title, setTitle] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -136,6 +137,7 @@ export default function Page3() {
     planManagerCompanyName: "",
     planManagerInvoiceEmail: "",
     crn: "",
+    irnNumber: "",
 
     // Add other fields here with initial empty strings
     // ...
@@ -177,6 +179,11 @@ export default function Page3() {
       setErrors((prevErrors) => ({ ...prevErrors, lastname: "" }));
     }
 
+    if (sexSpecify === "" && sex === "") {
+      setOptionFieldError(`sex is required`);
+    } else {
+      setOptionFieldError(null);
+    }
     if (!email) {
       formIsValid = false;
       setErrors((prevErrors) => ({
@@ -184,7 +191,11 @@ export default function Page3() {
         email: "Email is required",
       }));
     } else {
-      setErrors((prevErrors) => ({ ...prevErrors, email: "" }));
+      if (isEmail(email)) {
+        setErrors((prevErrors) => ({ ...prevErrors, email: "" }));
+      } else {
+        setErrors((prevErrors) => ({ ...prevErrors, email: "Invalid email" }));
+      }
     }
 
     if (!address) {
@@ -268,6 +279,21 @@ export default function Page3() {
       }));
     } else {
       setErrors((prevErrors) => ({ ...prevErrors, refferingType: "" }));
+    }
+
+    if (radiovalue1 === "yes") {
+      if (!irnNumber) {
+        formIsValid = false;
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          irnNumber: "IRN Number is required",
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          irnNumber: "",
+        }));
+      }
     }
     if (radiovalue2 === "yes") {
       if (!Employer) {
@@ -451,13 +477,11 @@ export default function Page3() {
       fundingManagement,
     };
 
-    // router.push(`/addpayment?patientId=${patientId}&&name=${firstname}+${lastname}&&email=${email}&&city${city}&&state=${state}`);
-    // console.log(requestBody);
     if (privacyPolicy === "accepted" && isFormValid) {
       console.log(requestBody);
       try {
         const response = await fetch(
-          "https://f453-111-88-61-44.ngrok-free.app/updatePatient",
+          "https://eas4nk9i7k.execute-api.ap-southeast-2.amazonaws.com/dev/updatePaitent",
           {
             method: "POST",
             headers: {
@@ -497,11 +521,6 @@ export default function Page3() {
     selectedOption: any,
     inputValue: any
   ) => {
-    if (selectedOption === "" && inputValue === "") {
-      setOptionFieldError(`${heading} is required`);
-    } else {
-      setOptionFieldError(null);
-    }
     // Do something with the data, for example, log it
     setSex(selectedOption);
     setSexSpacify(inputValue);
@@ -518,6 +537,19 @@ export default function Page3() {
     // Do something with the data, for example, log it
     setGenderIdentity(heading);
     setGenderIdentity(selectedOption);
+    console.log(
+      `Heading: ${heading}, Selected Option: ${selectedOption}, Input Value: ${inputValue}`
+    );
+  };
+
+  const handleOptionFieldTitleChange = (
+    heading: any,
+    selectedOption: any,
+    inputValue: any
+  ) => {
+    // Do something with the data, for example, log it
+    // setGenderIdentity(heading);
+    setTitle(selectedOption);
     console.log(
       `Heading: ${heading}, Selected Option: ${selectedOption}, Input Value: ${inputValue}`
     );
@@ -602,41 +634,35 @@ export default function Page3() {
     // Reset the input value when radio selection changes
   };
 
-  const handlePrivacyPolicy = (value:any) => {
-    setPrivacyPolicy(value)
-  }
+  const handlePrivacyPolicy = (value: any) => {
+    setPrivacyPolicy(value);
+  };
 
-  console.log(privacyPolicy)
+  console.log(privacyPolicy);
 
   return (
     <div className="relative flex flex-col gap-y-6">
       <div className="flex tablet:flex-col gap-x-3">
-        {title ? (
-          <InputComp
-            text="Title"
-            label="Title"
-            onChange={(e: any) => setTitle(e.target.value)}
-          />
-        ) : (
-          <InputComp
-            text="Title"
-            label="Title"
-            onChange={(e: any) => setTitle(e.target.value)}
-            error={errors.title}
-          />
-        )}
+        <OptionField
+          onChange={handleOptionFieldTitleChange}
+          heading="Title"
+          Option={["Mr", "Ms", "Mrs", "Miss", "Mx", "Master"]}
+        />
 
         <InputComp
           text="Firstname"
           label="Firstname"
           onChange={(e: any) => setFirstname(e.target.value)}
           error={errors.firstname}
+          value={firstname}
+          required={isRequired}
         />
         <InputComp
           text="Lastname"
           label="Lastname"
           onChange={(e: any) => setLastname(e.target.value)}
           error={errors.lastname}
+          value={lastname}
         />
       </div>
       <InputComp
@@ -673,117 +699,7 @@ export default function Page3() {
         ]}
       />
       {/* Pronouns Field */}
-      <div className="">
-        <h1 className="text-md tablet:mb-3 font-semibold text-[#006FEE]">
-          Pronounce
-        </h1>
-        <div className="flex tablet:flex-col tablet:items-start gap-y-1 items-center justify-between">
-          <p>No pronounce have been selected</p>
-          <button onClick={handleChange} className="underline text-pink-700">
-            Select Pronounce
-          </button>
-        </div>
-        <div className="mt-6">
-          {showPronounce && (
-            <div className="flex flex-col gap-y-4">
-              <div>
-                <OptionField
-                  onChange={handlePronounceNominativeChange}
-                  heading="Nominative (subject)"
-                  Option={["e", "he", "she", "they", "xe", "ze"]}
-                />
-                <p className="mt-2">
-                  <span className="font-bold">They </span>booked an appoinment
-                </p>
-              </div>
-              <div>
-                <OptionField
-                  onChange={handlePronounceAccusativeChange}
-                  heading="Accusative (object)"
-                  Option={[
-                    "em",
-                    "her",
-                    "him",
-                    "hir",
-                    "them",
-                    "xem",
-                    "xir",
-                    "xyr",
-                    "zir",
-                  ]}
-                />
-                <p className="mt-2">
-                  I called <span className="font-bold">them </span>to confirm.
-                </p>
-              </div>
-              <div>
-                <OptionField
-                  onChange={handlePronouncePossessiveChange}
-                  heading="possessive (pronominal)"
-                  Option={[
-                    "eir",
-                    "her",
-                    "hir",
-                    "his",
-                    "their",
-                    "xir",
-                    "xyr",
-                    "zir",
-                  ]}
-                />
-                <p className="mt-2">
-                  They called to confirm{" "}
-                  <span className="font-bold">their </span>
-                  appoinment
-                </p>
-              </div>
-              <div>
-                <OptionField
-                  onChange={handlePronouncePossessive2Change}
-                  heading="possessive (predicative)"
-                  Option={[
-                    "eirs",
-                    "hers",
-                    "hirs",
-                    "his",
-                    "their",
-                    "xirs",
-                    "xyrs",
-                    "zirs",
-                  ]}
-                />
-                <p className="mt-2">
-                  The appoinment is <span className="font-bold">Theirs</span>
-                </p>
-              </div>
-              <div>
-                <OptionField
-                  onChange={handlePronounceReflexiveChange}
-                  heading="Reflexive"
-                  Option={[
-                    "emself",
-                    "herself",
-                    "himself",
-                    "hirself",
-                    "theirself",
-                    "theirselves",
-                    "themself",
-                    "themsleves",
-                    "xemself",
-                    "xirself",
-                    "xyreself",
-                    "zirself",
-                  ]}
-                />
-                <p className="mt-2">
-                  They will arrive by{" "}
-                  <span className="font-bold">themselves</span>
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+
       <TextArea
         text="Extra Information"
         onChange={(e: any) => setExtraInformation(e.target.value)}
@@ -805,12 +721,14 @@ export default function Page3() {
         label="Email"
         onChange={(e: any) => setEmail(e.target.value)}
         error={errors.email}
+        value={email}
       />
       <InputComp
         text="Address"
         label="Address"
         onChange={(e: any) => setAddress(e.target.value)}
         error={errors.address}
+        value={address}
       />
 
       <div className="flex tablet:flex-col gap-x-3">
@@ -819,18 +737,22 @@ export default function Page3() {
           label="City"
           onChange={(e: any) => setCity(e.target.value)}
           error={errors.city}
+          value={city}
         />
         <InputComp
           text="State"
           label="State"
           onChange={(e: any) => setState(e.target.value)}
           error={errors.state}
+          value={state}
         />
         <InputComp
+          type="number"
           text="Postcode"
           label="Postcode"
           onChange={(e: any) => setPostcode(e.target.value)}
           error={errors.postcode}
+          value={postcode}
         />
       </div>
 
@@ -847,10 +769,14 @@ export default function Page3() {
         label="Emergency contact"
         onChange={(e: any) => setEmergencyContact(e.target.value)}
         error={errors.emergencyContact}
+        value={emergencyContact}
+        type="number"
       />
       <InputComp
         text="Medicare number"
         label="Medicare number"
+        type="number"
+        value={medicareNumber}
         onChange={(e: any) => setMedicareNumber(e.target.value)}
         error={errors.medicareNumber}
       />
@@ -859,6 +785,8 @@ export default function Page3() {
         label="Medicare reference number"
         onChange={(e: any) => setMedicareReferenceNumber(e.target.value)}
         error={errors.medicareReferenceNumber}
+        value={medicareReferenceNumber}
+        type="number"
       />
       <InputComp
         text="DVA card number"
@@ -869,6 +797,7 @@ export default function Page3() {
         text="Reference number"
         label="Reference number"
         onChange={(e: any) => setReferenceNumber(e.target.value)}
+        type="number"
       />
       {/* <Dropdown
         onChange={handleReferringDoctorChange}
@@ -884,14 +813,14 @@ export default function Page3() {
             className="border-2 border-red-600 rounded-xl"
             onChange={handleReferringTypeChange}
             heading="Referring Type"
-            Option={["Contact", "Other", "Patient"]}
+            Option={["None", "Contact", "Other", "Patient"]}
             error={errors.referringType}
           />
         ) : (
           <DropDown
             onChange={handleReferringTypeChange}
             heading="Referring Type"
-            Option={["Contact", "Other", "Patient"]}
+            Option={["None", "Contact", "Other", "Patient"]}
             error={errors.referringType}
           />
         )}
@@ -922,18 +851,23 @@ export default function Page3() {
           <div className="flex flex-col gap-y-4">
             <h1 className="text-lg font-semibold">Private Health Insurance</h1>
             <InputComp
+              label="Private Health Insurance Fund Name"
               text="Private Health Insurance Fund Name"
               onChange={(e: any) => setInsuranceFundName(e.target.value)}
             />
             <InputComp
               type="number"
+              label="Private Health Insurance Membership Number"
               text="Private Health Insurance Membership Number"
               onChange={(e: any) => setMembershipNumber(e.target.value)}
             />
             <InputComp
               type="number"
+              label="IRN #"
               text="IRN #"
+              value={irnNumber}
               onChange={(e: any) => setIrnNumber(e.target.value)}
+              error={errors.irnNumber}
             />
           </div>
         )}
@@ -959,42 +893,53 @@ export default function Page3() {
             <h1 className="text-lg font-semibold">Workers Compensation</h1>
             <div>
               <InputComp
+                label="Employer"
                 text="Employer"
                 onChange={(e: any) => setEmployer(e.target.value)}
                 error={errors.Employer}
+                value={Employer}
               />
             </div>
             <InputComp
+              label="Employer Email"
               type="email"
               text="Employer Email"
               onChange={(e: any) => setEmployerEmail(e.target.value)}
             />
             <InputComp
+              label="Employer Number"
               type="number"
               text="Employer Number"
               onChange={(e: any) => setEmployerNumber(e.target.value)}
             />
             <InputComp
+              label="Insurance Company"
               text="Insurance Company"
               onChange={(e: any) => setInsuranceCompany(e.target.value)}
               error={errors.insuranceCompany}
+              value={insuranceCompany}
             />
             <InputComp
+              label="Insurance Email"
               type="email"
               text="Insurance Email"
               onChange={(e: any) => setInsuranceEmail(e.target.value)}
               error={errors.insuranceEmail}
+              value={insuranceEmail}
             />
             <InputComp
+              label="Case Manager Name"
               text="Case Manager Name"
               onChange={(e: any) => setCaseManager(e.target.value)}
             />
             <InputComp
+              label="Case Manager Email"
               type="email"
               text="Case Manager Email"
               onChange={(e: any) => setCaseManagerEmail(e.target.value)}
             />
             <InputComp
+              label="Case Manager Number"
               type="number"
               text="Case Manager Number"
               onChange={(e: any) => setCaseManagerNumber(e.target.value)}
@@ -1134,24 +1079,32 @@ export default function Page3() {
           <div className="flex flex-col gap-y-4">
             <h1 className="text-lg font-semibold">Aged Care</h1>
             <InputComp
+              label="Provider Name"
               text="Provider Name"
               onChange={(e: any) => setProviderName(e.target.value)}
               error={errors.providerName}
+              value={providerName}
             />
             <InputComp
+              label="Case Manager Name"
               text="Case Manager Name"
               onChange={(e: any) => setCaseManagerName(e.target.value)}
             />
             <InputComp
+              label="Contact Number"
               text="Contact Number"
               onChange={(e: any) => setContactNumber(e.target.value)}
+              type="number"
             />
             <InputComp
+              label="Case Manager Email Address"
               text="Case Manager Email Address"
               onChange={(e: any) => setCaseManagerEmailAgedCare(e.target.value)}
               error={errors.caseManagerEmailAgedCare}
+              value={caseManagerEmailAgedCare}
             />
             <InputComp
+              label="Account Email Address"
               text="Account Email Address"
               onChange={(e: any) => setAccountEmail(e.target.value)}
             />
@@ -1180,15 +1133,18 @@ export default function Page3() {
           <div className="flex flex-col gap-y-4">
             <h1 className="text-lg font-semibold">NDIS</h1>
             <InputComp
+              label="NDIS Number"
               text="NDIS Number"
               onChange={(e: any) => setNDISNumber(e.target.value)}
               error={errors.ndisNumber}
+              value={ndisNumber}
+              type="number"
             />
             <RadioGroup
               label="Funding Management"
               orientation="horizontal"
               color="warning"
-            > 
+            >
               <Radio
                 onChange={(e) => handleRadioChange2(e.target.value)}
                 value="Agency-Managed"
@@ -1213,26 +1169,35 @@ export default function Page3() {
         {fundingManagement === "Plan-Managed" && radiovalue4 === "yes" && (
           <div className="flex flex-col gap-y-4">
             <InputComp
+              label="Plan Manager Company Name"
               text="Plan Manager Company Name"
               onChange={(e: any) => setPlanManagerCompanyName(e.target.value)}
+              value={planManagerCompanyName}
               error={errors.planManagerCompanyName}
             />
             <InputComp
+              label="Plan Manager Contact Name"
               text="Plan Manager Contact Name"
               onChange={(e: any) => setPlanManagerContactNumber(e.target.value)}
+              type="number"
             />
             <InputComp
+              label="Plan Manager Number"
               text="Plan Manager Number"
               onChange={(e: any) => setPlanManagerNumber(e.target.value)}
+              type="number"
             />
             <InputComp
+              label="Plan Manager Email"
               text="Plan Manager Email"
               onChange={(e: any) => setPlanEmail(e.target.value)}
             />
             <InputComp
+              label="Plan Manager Invoice Email"
               text="Plan Manager Invoice Email"
               onChange={(e: any) => setPlanManagerInvoiceEmail(e.target.value)}
               error={errors.planManagerInvoiceEmail}
+              value={planManagerInvoiceEmail}
             />
           </div>
         )}
@@ -1257,7 +1222,9 @@ export default function Page3() {
           <div className="flex flex-col gap-y-4">
             <h1 className="text-lg font-semibold">Pensioner Concession Card</h1>
             <InputComp
+              label="CRN #"
               text="CRN #"
+              type="number"
               onChange={(e: any) => setCRN(e.target.value)}
               error={errors.crn}
             />

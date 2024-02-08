@@ -564,7 +564,7 @@ console.log( "Radio VAlue ",radioValue)
     if (privacyPolicy === "accepted" && isFormValid) {
       try {
         const response = await fetch(
-          "https://d875-2406-d00-cccf-b461-cba-91b3-e1f2-f925.ngrok-free.app/updatePatient",
+          "https://d875-2406-d00-cccf-b461-cba-91b3-e1f2-f925.ngrok-free.app/updatePaitent",
           {
             method: "POST",
             headers: {

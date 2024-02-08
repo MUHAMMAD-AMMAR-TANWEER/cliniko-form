@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useState} from "react";
 import { RadioGroup, Radio } from "@nextui-org/react";
 
 interface selectedValue {
@@ -7,10 +7,14 @@ interface selectedValue {
 
 const App: React.FC<selectedValue> = ({ onChange }) => {
 
+  const [policy , setPolicy] = useState("accepted")
+
   const handleRadioButtonChange = (e: any) => {
     const selectedValue = e.target.value;
     onChange(selectedValue);
+    setPolicy(selectedValue)
   };
+  
   
   return (
     <RadioGroup
@@ -18,6 +22,7 @@ const App: React.FC<selectedValue> = ({ onChange }) => {
       color="warning"
       orientation="horizontal"
       defaultValue="accepted"
+      errorMessage={policy !== "accepted" ? `Please accept the policy` : `` }
     >
       <Radio value="no-response" onChange={handleRadioButtonChange}>
         No Response
