@@ -43,7 +43,7 @@ const InputComp: React.FC<InputProps> = ({
             <div className="border border-red-500 rounded-xl">
               <Input
                 isRequired
-                type={`${type}`}
+                type={type}
                 value={value}
                 label={label}
                 className=""
