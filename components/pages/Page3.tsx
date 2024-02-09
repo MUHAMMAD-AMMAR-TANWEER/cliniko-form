@@ -747,10 +747,10 @@ export default function Page3() {
           value={state}
         />
         <InputComp
-          type="number"
+          
           text="Postcode"
           label="Postcode"
-          onChange={(e: any) => setPostcode(e.target.value)}
+          onChange={(e: any) => setPostcode(e.target.value.replace(/[^0-9]/g, ''))}
           error={errors.postcode}
           value={postcode}
         />
@@ -767,26 +767,26 @@ export default function Page3() {
       <InputComp
         text="Emergency contact"
         label="Emergency contact"
-        onChange={(e: any) => setEmergencyContact(e.target.value)}
+        onChange={(e: any) => setEmergencyContact(e.target.value.replace(/[^0-9]/g, ''))}
         error={errors.emergencyContact}
         value={emergencyContact}
-        type="number"
+        
       />
       <InputComp
         text="Medicare number"
         label="Medicare number"
-        type="number"
+       
         value={medicareNumber}
-        onChange={(e: any) => setMedicareNumber(e.target.value)}
+        onChange={(e: any) => setMedicareNumber(e.target.value.replace(/[^0-9]/g, ''))}
         error={errors.medicareNumber}
       />
       <InputComp
         text="Medicare reference number"
         label="Medicare reference number"
-        onChange={(e: any) => setMedicareReferenceNumber(e.target.value)}
+        onChange={(e: any) => setMedicareReferenceNumber(e.target.value.replace(/[^0-9]/g, ''))}
         error={errors.medicareReferenceNumber}
         value={medicareReferenceNumber}
-        type="number"
+        
       />
       <InputComp
         text="DVA card number"
@@ -796,8 +796,8 @@ export default function Page3() {
       <InputComp
         text="Reference number"
         label="Reference number"
-        onChange={(e: any) => setReferenceNumber(e.target.value)}
-        type="number"
+        onChange={(e: any) => setReferenceNumber(e.target.value.replace(/[^0-9]/g, ''))}
+        
       />
       {/* <Dropdown
         onChange={handleReferringDoctorChange}
@@ -857,17 +857,17 @@ export default function Page3() {
               onChange={(e: any) => setInsuranceFundName(e.target.value)}
             />
             <InputComp
-              type="number"
+              
               label="Private Health Insurance Membership Number"
               text="Private Health Insurance Membership Number"
-              onChange={(e: any) => setMembershipNumber(e.target.value)}
+              onChange={(e: any) => setMembershipNumber(e.target.value.replace(/[^0-9]/g, ''))}
             />
             <InputComp
-              type="number"
+              
               label="IRN #"
               text="IRN #"
               value={irnNumber}
-              onChange={(e: any) => setIrnNumber(e.target.value)}
+              onChange={(e: any) => setIrnNumber(e.target.value.replace(/[^0-9]/g, ''))}
               error={errors.irnNumber}
             />
           </div>
@@ -909,9 +909,9 @@ export default function Page3() {
             />
             <InputComp
               label="Employer Number"
-              type="number"
+             
               text="Employer Number"
-              onChange={(e: any) => setEmployerNumber(e.target.value)}
+              onChange={(e: any) => setEmployerNumber(e.target.value.replace(/[^0-9]/g, ''))}
             />
             <InputComp
               label="Insurance Company"
@@ -941,9 +941,9 @@ export default function Page3() {
             />
             <InputComp
               label="Case Manager Number"
-              type="number"
+             
               text="Case Manager Number"
-              onChange={(e: any) => setCaseManagerNumber(e.target.value)}
+              onChange={(e: any) => setCaseManagerNumber(e.target.value.replace(/[^0-9]/g, ''))}
             />
             {!day || !month || !year ? (
               <div className="flex flex-col gap-y-2 text-[#006FEE] ">
@@ -1094,8 +1094,8 @@ export default function Page3() {
             <InputComp
               label="Contact Number"
               text="Contact Number"
-              onChange={(e: any) => setContactNumber(e.target.value)}
-              type="number"
+              onChange={(e: any) => setContactNumber(e.target.value.replace(/[^0-9]/g, ''))}
+             
             />
             <InputComp
               label="Case Manager Email Address"
@@ -1136,10 +1136,10 @@ export default function Page3() {
             <InputComp
               label="NDIS Number"
               text="NDIS Number"
-              onChange={(e: any) => setNDISNumber(e.target.value)}
+              onChange={(e: any) => setNDISNumber(e.target.value.replace(/[^0-9]/g, ''))}
               error={errors.ndisNumber}
               value={ndisNumber}
-              type="number"
+              
             />
             <RadioGroup
               label="Funding Management"
@@ -1179,14 +1179,14 @@ export default function Page3() {
             <InputComp
               label="Plan Manager Contact Name"
               text="Plan Manager Contact Name"
-              onChange={(e: any) => setPlanManagerContactNumber(e.target.value)}
-              type="number"
+              onChange={(e: any) => setPlanManagerContactNumber(e.target.value.replace(/[^0-9]/g, ''))}
+              
             />
             <InputComp
               label="Plan Manager Number"
               text="Plan Manager Number"
-              onChange={(e: any) => setPlanManagerNumber(e.target.value)}
-              type="number"
+              onChange={(e: any) => setPlanManagerNumber(e.target.value.replace(/[^0-9]/g, ''))}
+              
             />
             <InputComp
               label="Plan Manager Email"
@@ -1225,8 +1225,8 @@ export default function Page3() {
             <InputComp
               label="CRN #"
               text="CRN #"
-              type="number"
-              onChange={(e: any) => setCRN(e.target.value)}
+             
+              onChange={(e: any) => setCRN(e.target.value.replace(/[^0-9]/g, ''))}
               error={errors.crn}
             />
             {!day2 || !month2 || !year2 ? (
