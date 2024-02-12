@@ -44,7 +44,7 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({ onError }) => {
         type="tel"
         placeholder={`Phone (${phoneType})`}
         value={PhoneNumber}
-        onChange={(e) => setPhoneNumberLocal(e.target.value)}
+        onChange={(e) => setPhoneNumberLocal(e.target.value.replace(/[^0-9]/g,'').slice(0,10))}
       />
     </div>
   );

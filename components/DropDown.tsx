@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Select, SelectItem, Input } from "@nextui-org/react";
 
 interface options {
-  Option: Array<string>;
+  Option: any;
   heading: string;
   onChange?: any;
   error?: string | undefined;

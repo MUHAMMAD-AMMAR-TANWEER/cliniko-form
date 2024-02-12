@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputComp from "../InputComp";
 import { Button, Dropdown, Radio, RadioGroup } from "@nextui-org/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -52,7 +52,7 @@ export default function Page3() {
   const [dvaCardNumber, setDvaCardNumber] = useState("");
   const [referenceNumber, setReferenceNumber] = useState("");
   const [refferingType, setReferringType] = useState("");
-
+  const [referralsList, setReferralLists] = useState(["None", "Contact", "Other", "Patient"])
   //   ------------------- Conditional Question 1 -----------------------------
   const [radiovalue1, setRadioValue1] = useState("");
   const [insuranceFundName, setInsuranceFundName] = useState("");
@@ -542,6 +542,18 @@ export default function Page3() {
     );
   };
 
+  const handleOptionStateChange = (
+    selectedOption:any,
+    heading: any,
+    inputValue:any,
+
+  ) =>{
+    // setState(selectedOption);
+
+    setState(heading)
+    console.log(`here is the selected option  ${heading}`)
+  }
+
   const handleOptionFieldTitleChange = (
     heading: any,
     selectedOption: any,
@@ -638,7 +650,25 @@ export default function Page3() {
     setPrivacyPolicy(value);
   };
 
-  console.log(privacyPolicy);
+  // console.log(privacyPolicy);
+
+  useEffect(()=>{
+    const fetchData = async ()=>{
+      try {
+        const response = await fetch('https://eas4nk9i7k.execute-api.ap-southeast-2.amazonaws.com/dev/getReferralSourceApi')
+        if (!response.ok){
+          throw new Error(`API request failed with status ${response.status}`)
+        }
+        const data = await response.json()
+        setReferralLists(data.referrals)
+      }
+      catch (e) {
+        console.log("Api for fetching is throughing error")
+      }
+    }
+
+    fetchData()
+  },[])
 
   return (
     <div className="relative flex flex-col gap-y-6">
@@ -739,19 +769,33 @@ export default function Page3() {
           error={errors.city}
           value={city}
         />
-        <InputComp
+        {/* <InputComp
           text="State"
           label="State"
           onChange={(e: any) => setState(e.target.value)}
           error={errors.state}
           value={state}
-        />
+        /> */}
+              <OptionField
+        onChange={handleOptionStateChange}
+        heading="State"
+        Option={[
+          "NSW",
+          "QLD",
+          "VIC",
+          "ACT",
+          "SA",
+          "WA",
+          "NT",
+          "TAS"
+        ]}
+      />
         <InputComp
           
           text="Postcode"
           label="Postcode"
-          onChange={(e: any) => setPostcode(e.target.value.replace(/[^0-9]/g, ''))}
-          error={errors.postcode}
+          onChange={(e: any) => setPostcode(e.target.value.replace(/[^0-9]/g, '').slice(0,4))}
+          error={postcode.length !== 4 ? "Please enter valid postcode" :""}
           value={postcode}
         />
       </div>
@@ -777,8 +821,8 @@ export default function Page3() {
         label="Medicare number"
        
         value={medicareNumber}
-        onChange={(e: any) => setMedicareNumber(e.target.value.replace(/[^0-9]/g, ''))}
-        error={errors.medicareNumber}
+        onChange={(e: any) => setMedicareNumber(e.target.value.replace(/[^0-9]/g, '').slice(0,11))}
+        error={medicareNumber.length !== 11 ? "Please enter valid Medicare Number ": ""}
       />
       <InputComp
         text="Medicare reference number"
@@ -791,7 +835,9 @@ export default function Page3() {
       <InputComp
         text="DVA card number"
         label="DVA card number"
-        onChange={(e: any) => setDvaCardNumber(e.target.value)}
+        onChange={(e: any) => setDvaCardNumber(e.target.value.replace(/[^a-zA-Z0-9]/g,'').slice(0,9))}
+        value={dvaCardNumber}
+        // error={dvaCardNumber.length < 8 ?"Please enter valid DVA Number":""}
       />
       <InputComp
         text="Reference number"
@@ -813,14 +859,14 @@ export default function Page3() {
             className="border-2 border-red-600 rounded-xl"
             onChange={handleReferringTypeChange}
             heading="Referring Type"
-            Option={["None", "Contact", "Other", "Patient"]}
+            Option={referralsList}
             error={errors.referringType}
           />
         ) : (
           <DropDown
             onChange={handleReferringTypeChange}
             heading="Referring Type"
-            Option={["None", "Contact", "Other", "Patient"]}
+            Option={referralsList}
             error={errors.referringType}
           />
         )}
