@@ -852,13 +852,13 @@ export default function Page3() {
       /> */}
       <div>
         <h1 className="text-lg font-semibold mb-2 mt-2">
-          Referral source(for marketing)
+          Referral source
         </h1>
         {refferingType === "none" ? (
           <DropDown
             className="border-2 border-red-600 rounded-xl"
             onChange={handleReferringTypeChange}
-            heading="Referring Type"
+            heading=""
             Option={referralsList}
             error={errors.referringType}
           />
