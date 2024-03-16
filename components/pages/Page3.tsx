@@ -77,7 +77,7 @@ export default function Page3() {
 
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
   const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
-  const years = Array.from({ length: 100 }, (_, i) => (2022 - i).toString());
+  const years = Array.from({ length: 100 }, (_, i) => (2080 - i).toString());
 
   //   ------------------- Conditional Question 3 -----------------------------
   const [radiovalue3, setRadioValue3] = useState("");
@@ -108,7 +108,7 @@ export default function Page3() {
 
   const days2 = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
   const months2 = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
-  const years2 = Array.from({ length: 100 }, (_, i) => (2022 - i).toString());
+  const years2 = Array.from({ length: 100 }, (_, i) => (2080 - i).toString());
 
   // -----------------------------  Error States --------------------------------
   const [dobError, setDOBError] = useState<string | null>(null);
