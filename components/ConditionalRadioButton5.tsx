@@ -17,7 +17,7 @@ const ConditionalRadioButton5: React.FC<condtion5> = ({ onFieldsChange }) => {
 
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
   const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
-  const years = Array.from({ length: 100 }, (_, i) => (2022 - i).toString()); // Adjust the range of years as needed
+  const years = Array.from({ length: 100 }, (_, i) => (2080 - i).toString()); // Adjust the range of years as needed
 
   useEffect(() => {
     const handleDOBChange = () => {
